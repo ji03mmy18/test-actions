@@ -1,0 +1,21 @@
+name: Test Actions CI workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version from project
+        id: ver-info
+        run: |
+          echo "long_ver=$(node -e "console.log(require('./package.json').version)")" >> "$GITHUB_OUTPUT" |
+          echo "short_ver=$(node -e "console.log('v' + require('./package.json').version.split('.')[0])")" >> "$GITHUB_OUTPUT"
+
+      - name: Show version from previous step
+        run: echo "${{ steps.ver-info.outputs.long_ver }} ${{ steps.ver-info.outputs.short_ver }}"
